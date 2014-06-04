@@ -2,6 +2,11 @@ MAX_ROUTES = 64
 MAX_TTL = 120 #tempo
 INFINITO = 65 #maior que a maxima distancia que um host pode estar do outro
 
+# Nossas mensagens terao como primeiro campo que contem um numero de classificacao da mensagem:
+#        0 -> a mensagem eh um ACK
+#        1 -> a mensagem eh de rotina
+#        2 -> a mensagem eh de mudanca
+
 class route:
     dest = 0
     nexthop = 0
@@ -56,6 +61,7 @@ class router:
         for (i in range(0, len(self.vizinhos))):
             dest = self.vizinhos[i]
             mensagem = ""
+            mensagem += str(2)
             mensagem += str(self.num_routes)
             for (i in range(0, num_routes)):
                 #faz o poisoning se tiver mandando a mensagem pro nexthop TEM QUE COLOCAR AQUELES NEGOCIOS DE ZFILL
