@@ -1,5 +1,6 @@
-MAX_ROUTES = 128
+MAX_ROUTES = 127
 MAX_TTL = 120 #tempo
+INFINITO = 128 #maior que a maxima distancia que um host pode estar do outro
 
 def route:
     dest = 0
@@ -38,11 +39,29 @@ def router:
         self.table[i] = new
         self.table[i].ttl = MAX_TTL
         self.table[i].cost += 1
-        #tem que setar uma variavel falando que vai enviar a nova rota ou eviar por aqui mesmo
-    
+        self.sendChange()
+
     def updatingRoutingTable(newRoute, numNewRoutes):
         for (i in range(0, numNewRoutes):
             self.merge_routes(newRoute[i])
+    
+    def sendChange():
+        global INFINITO
+        #TEM QUE MUDAR PRA SOH MANDAR PRO VIZINHOS, ACHO QUE TEM QUE CRIAR UMA LISTA DE VIZINHOS
+        for (i in range(0, num_routes)):
+            dest = self.nexthop
+            mensagem = ""
+            mensagem += str(self.num_routes)
+            for (i in range(0, num_routes)):
+                #faz o poisoning se tiver mandando a mensagem pro nexthop
+                if (dest == self.table[i].nexthop):
+                    mensagem += self.table[i].dest
+                    mensagem += INFINITO
+                else:
+                    mensagem += self.table[i].dest
+                    mensagem += self.table[i].cost
+            #envia mensagem
+            send(mensagem, destino)
     
         
         
