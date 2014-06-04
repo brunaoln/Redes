@@ -15,6 +15,7 @@ def route:
 
 def router:
     table = []
+    vizinhos = []
     num_routes = 0
     def __init__():
         for i in range(0, MAX_ROUTES):
