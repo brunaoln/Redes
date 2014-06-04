@@ -2,7 +2,7 @@ MAX_ROUTES = 127
 MAX_TTL = 120 #tempo
 INFINITO = 128 #maior que a maxima distancia que um host pode estar do outro
 
-def route:
+class route:
     dest = 0
     nexthop = 0
     cost = 0
@@ -13,7 +13,7 @@ def route:
         self.cost = 0
         self.ttl = 0
 
-def router:
+class router:
     table = []
     vizinhos = []
     num_routes = 0
