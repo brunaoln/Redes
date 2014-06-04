@@ -77,6 +77,7 @@ class router:
                     mensagem += self.table[i].cost
             #envia mensagem
             t = time.time()
+            recebe = False
             while (recebe = False):
                 con_udp.send(mensagem, dest)
                 while (time.time() - t <= ESPERA_ACK):
