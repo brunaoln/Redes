@@ -9,6 +9,7 @@ ESPERA_ACK = MAX_TTL/3 # tempo de espera por um ACK
 #        1 -> a mensagem eh de rotina
 #        2 -> a mensagem eh de mudanca
 TAMANHO_MENSAGEM = 1000
+MAXIMO_NUMERO_TENTATIVAS = 6
 
 
 class route:
@@ -78,11 +79,14 @@ class router:
             #envia mensagem
             t = time.time()
             recebe = False
-            while (recebe = False):
+            numero_tentativas = 0
+            while (recebe = False and numero_tentativas < MAXIMO_NUMERO_TENTATIVAS):
                 con_udp.send(mensagem, dest)
                 while (time.time() - t <= ESPERA_ACK):
                      msg, addr = con_udp.recvfrom(TAMANHO_MENSAGEM)
                 if int(msg[0]) == 0:
                     recebe = True
-        
-        
+                else:
+                    numero_tentativas += 1
+            if numero_tentativas == MAXIMO_NUMERO_TENTATIVAS:
+                #atualiza todas as entradas que tenham esse nó de destino incomunicável com distâncias iguais a INFINITO 
