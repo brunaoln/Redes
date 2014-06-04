@@ -17,9 +17,13 @@ def router:
     table = []
     vizinhos = []
     num_routes = 0
-    def __init__():
+    def __init__(viz):
+        #cria tabela de roteamento
         for i in range(0, MAX_ROUTES):
-            table.append(route())
+            self.table.append(route())
+        #cria lista com os vizinhos
+        for item in viz:
+            self.vizinhos.append(item)
             
     #dada um nova rota atualiza a tabela de roteamento
     def merge_routes (new):
@@ -48,9 +52,9 @@ def router:
     
     def sendChange():
         global INFINITO
-        #TEM QUE MUDAR PRA SOH MANDAR PRO VIZINHOS, ACHO QUE TEM QUE CRIAR UMA LISTA DE VIZINHOS
-        for (i in range(0, num_routes)):
-            dest = self.nexthop
+        #manda as atualizacoes apenas para os nodos vizinhos
+        for (i in range(0, len(self.vizinhos))):
+            dest = self.vizinhos[i]
             mensagem = ""
             mensagem += str(self.num_routes)
             for (i in range(0, num_routes)):
@@ -62,7 +66,7 @@ def router:
                     mensagem += self.table[i].dest
                     mensagem += self.table[i].cost
             #envia mensagem
-            send(mensagem, destino)
+            send(mensagem, dest)
     
         
         
