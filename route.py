@@ -70,22 +70,22 @@ class router:
             mensagem = ""
             mensagem += str(2)
             mensagem += str(self.num_routes)
-            for (i in range(0, num_routes)):
+            for (j in range(0, num_routes)):
                 #faz o poisoning se tiver mandando a mensagem pro nexthop TEM QUE COLOCAR AQUELES NEGOCIOS DE ZFILL
-                if (dest == self.table[i].nexthop):
-                    mensagem += self.table[i].dest
+                if (dest == self.table[j].nexthop):
+                    mensagem += self.table[j].dest
                     mensagem += INFINITO
                 else:
-                    mensagem += self.table[i].dest
-                    mensagem += self.table[i].cost
+                    mensagem += self.table[j].dest
+                    mensagem += self.table[j].cost
             #envia mensagem
             t = time.time()
             recebe = False
             numero_tentativas = 0
             while (recebe is False and numero_tentativas < MAXIMO_NUMERO_TENTATIVAS):
-                con_udp.send(mensagem, dest)
+                self.conecoes[i].send(mensagem, dest)
                 while (time.time() - t <= ESPERA_ACK):
-                     msg, addr = con_udp.recvfrom(TAMANHO_MENSAGEM)
+                     msg, addr = self.conexoes[i].recvfrom(TAMANHO_MENSAGEM)
                 if int(msg[0]) == 0:
                     recebe = True
                 else:
