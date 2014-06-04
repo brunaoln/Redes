@@ -38,6 +38,7 @@ def router:
         self.table[i] = new
         self.table[i].ttl = MAX_TTL
         self.table[i].cost += 1
+        #tem que setar uma variavel falando que vai enviar a nova rota ou eviar por aqui mesmo
     
     def updatingRoutingTable(newRoute, numNewRoutes):
         for (i in range(0, numNewRoutes):
