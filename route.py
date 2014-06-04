@@ -1,3 +1,5 @@
+import time
+
 MAX_ROUTES = 64
 MAX_TTL = 120 #tempo
 INFINITO = 65 #maior que a maxima distancia que um host pode estar do outro
@@ -6,6 +8,8 @@ ESPERA_ACK = MAX_TTL/3 # tempo de espera por um ACK
 #        0 -> a mensagem eh um ACK
 #        1 -> a mensagem eh de rotina
 #        2 -> a mensagem eh de mudanca
+TAMANHO_MENSAGEM = 1000
+
 
 class route:
     dest = 0
@@ -72,7 +76,12 @@ class router:
                     mensagem += self.table[i].dest
                     mensagem += self.table[i].cost
             #envia mensagem
-            send(mensagem, dest)
-    
+            t = time.time()
+            while (recebe = False):
+                con_udp.send(mensagem, dest)
+                while (time.time() - t <= ESPERA_ACK):
+                     msg, addr = con_udp.recvfrom(TAMANHO_MENSAGEM)
+                if int(msg[0]) == 0:
+                    recebe = True
         
         
