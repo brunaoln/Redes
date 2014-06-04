@@ -58,7 +58,7 @@ def router:
             mensagem = ""
             mensagem += str(self.num_routes)
             for (i in range(0, num_routes)):
-                #faz o poisoning se tiver mandando a mensagem pro nexthop
+                #faz o poisoning se tiver mandando a mensagem pro nexthop TEM QUE COLOCAR AQUELES NEGOCIOS DE ZFILL
                 if (dest == self.table[i].nexthop):
                     mensagem += self.table[i].dest
                     mensagem += INFINITO
