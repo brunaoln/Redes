@@ -26,15 +26,17 @@ class route:
 class router:
     table = []
     vizinhos = []
+    conexoes = None
     num_routes = 0
-    def __init__(viz):
+    def __init__(viz, lista_conexoes):
         #cria tabela de roteamento
         for i in range(0, MAX_ROUTES):
             self.table.append(route())
         #cria lista com os vizinhos
         for item in viz:
             self.vizinhos.append(item)
-            
+        self.conexoes = lista_conexoes
+        
     #dada um nova rota atualiza a tabela de roteamento
     def merge_routes (new):
         for (i in range(0, num_routes)):
@@ -80,7 +82,7 @@ class router:
             t = time.time()
             recebe = False
             numero_tentativas = 0
-            while (recebe = False and numero_tentativas < MAXIMO_NUMERO_TENTATIVAS):
+            while (recebe is False and numero_tentativas < MAXIMO_NUMERO_TENTATIVAS):
                 con_udp.send(mensagem, dest)
                 while (time.time() - t <= ESPERA_ACK):
                      msg, addr = con_udp.recvfrom(TAMANHO_MENSAGEM)
