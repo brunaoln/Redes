@@ -1,5 +1,5 @@
 MAX_ROUTES = 128
-MAX_TTL = 120
+MAX_TTL = 120 #tempo
 
 def route:
     dest = 0
