@@ -1,6 +1,6 @@
-MAX_ROUTES = 127
+MAX_ROUTES = 64
 MAX_TTL = 120 #tempo
-INFINITO = 128 #maior que a maxima distancia que um host pode estar do outro
+INFINITO = 65 #maior que a maxima distancia que um host pode estar do outro
 
 class route:
     dest = 0
