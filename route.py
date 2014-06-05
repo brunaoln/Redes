@@ -5,8 +5,8 @@ from socket import *
 MAX_ROUTES = 64
 MAX_TTL = 120 #tempo
 INFINITO = 65 #maior que a maxima distancia que um host pode estar do outro
-ESPERA_ACK = MAX_TTL/3 # tempo de espera por um ACK
 MUDANCA = 0
+TEMPO_ROTINA = 300 #tempo para enviar o quadro de rotina
 
 # Nossas mensagens terao como primeiro campo que contem um numero de classificacao da mensagem:
 #        0 -> ACK para mensagem de rotina
@@ -30,26 +30,25 @@ def route:
 
 def unpack(dados, nexthop):
     #guarda o numero de rotas daquela tabela
-    num_routes = int(dados[1:3])
+    num_routes = int(dados[0:2])
     newRoutes = []
-    j = 3
+    j = 2
     for (i in range (0, num_routes)):
         #cria rotas com os dados do pacote
-        newRoutes.append(route(j:(j + 14)], nexthop, dados[(j + 14):(j + 16)]])
-        j += 16
+        newRoutes.append(route(j:(j + 13)], nexthop, dados[(j + 13):(j + 15)]])
+        j += 15
     return num_routes, newRoutes
 
 
 class router:
     table = None
-    #vizinhos = []
-    #conexoes = None
-    vizinhos = []
+    vizinhos = None
     num_routes = 0
     #utilizada para criar a tabela globalmen
     def __init__():
         #deque ja tem controle de acesso concorrente a dados
         table = deque(maxlen = MAX_ROUTES)
+        vizinhos = deque(maxlen = MAX_ROUTES)
         
     def cria_tabela(viz, lista_conexoes):
          #cria tabela de roteamento
@@ -58,9 +57,8 @@ class router:
             self.num_routes += 1
         #cria lista com os vizinhos
         for item in range(0,len(viz)):
-            self.vizinhos.append([viz[item], lista_conexoes[item])
-        #self.conexoes = lista_conexoes
-        
+            self.vizinhos.append(item)
+
     #dada um nova rota atualiza a tabela de roteamento
     def merge_routes (new):
         global MUDANCA
@@ -91,36 +89,6 @@ class router:
         for (i in range(0, len(NewRoutes)):
             self.merge_routes(newRoute[i])
     
-    def sendChange(num_routes, rotas):
-        global INFINITO
-        #manda as atualizacoes apenas para os nodos vizinhos
-        for (i in range(0, len(self.vizinhos))):
-            dest = self.vizinhos[i]
-            mensagem = ""
-            mensagem += str(3)
-            mensagem += str(self.num_routes)
-            for (j in range(0, num_routes)):
-                #faz o poisoning se tiver mandando a mensagem pro nexthop TEM QUE COLOCAR AQUELES NEGOCIOS DE ZFILL
-                if (dest == self.table[j].nexthop):
-                    mensagem += self.table[j].dest
-                    mensagem += INFINITO
-                else:
-                    mensagem += self.table[j].dest
-                    mensagem += self.table[j].cost
-            #envia mensagem
-            t = time.time()
-            recebe = False
-            numero_tentativas = 0
-            while (recebe is False and numero_tentativas < MAXIMO_NUMERO_TENTATIVAS):
-                self.conecoes[i].send(mensagem, dest)
-                while (time.time() - t <= ESPERA_ACK):
-                     msg, addr = self.conexoes[i].recvfrom(TAMANHO_MENSAGEM)
-                if int(msg[0]) == 0:
-                    recebe = True
-                else:
-                    numero_tentativas += 1
-            if numero_tentativas == MAXIMO_NUMERO_TENTATIVAS:
-                #atualiza todas as entradas que tenham esse nó de destino incomunicável com distâncias iguais a INFINITO 
                 
     def recebeTabela(self):
         #recebe no modo broadcast
@@ -135,21 +103,31 @@ class router:
     
     def enviaTabela(self):
         
+        time_to_send_rotina = False
+        global MUDANCA, TEMPO_ROTINA
+        #LOCK MUDANCA!!!!!!!!!!!!!!!!!!
+        t0 = time.time()
+        
         while True:
-            for item in self.vizinhos:
-                
-                dest = item[0]
-                mensagem = ""
-                mensagem += str(3)
-                mensagem += str(self.num_routes)
-                for (j in range(0, num_routes)):
-                    #faz o poisoning se tiver mandando a mensagem pro nexthop TEM QUE COLOCAR AQUELES NEGOCIOS DE ZFILL
-                    if (dest == self.table[j].nexthop):
-                        mensagem += self.table[j].dest
-                        mensagem += INFINITO
-                    else:
-                        mensagem += self.table[j].dest
-                        mensagem += self.table[j].cost
-                #envia mensagem
-                item[1].send(mensagem, dest)
+            if ((time.time() - t0) == TEMPO_ROTINA)
+                time_to_send_rotina = True
+            #se teve uma mudanca ou deu o periodo de enviar o quadro de rotina envia 
+            if (MUDANCA or time_to_send_rotina):
+                t0 = time.time()
+                for item in self.vizinhos:
+                    MUDANCA = 0
+                    #TIRA O LOCK MUDANCA!!!!!!!
+                    dest = item[0]
+                    mensagem = ""
+                    mensagem += str(self.num_routes)
+                    for (j in range(0, num_routes)):
+                        #faz o poisoning se tiver mandando a mensagem pro nexthop TEM QUE COLOCAR AQUELES NEGOCIOS DE ZFILL
+                        if (dest == self.table[j].nexthop):
+                            mensagem += self.table[j].dest
+                            mensagem += INFINITO
+                        else:
+                            mensagem += self.table[j].dest
+                            mensagem += self.table[j].cost
+                    #envia mensagem
+                    item[1].send(mensagem, dest)
                 
