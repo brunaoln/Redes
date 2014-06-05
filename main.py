@@ -5,7 +5,7 @@ import route
 import socket
 import threading
 import time
-#from collections import deque
+#from collections import dequee
 tabela = route.router()
 #tabela = deque(maxlen = TAMANHO_TABELA) # create a deque with SIZE_BUFFER positions
 PORT = 9999 #porta com a qual sera feita a conexao
