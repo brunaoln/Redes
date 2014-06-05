@@ -16,20 +16,20 @@ TEMPO_PARA_REENVIO = 60 #periodo (em segundos) para enviar mensagem de rotina
 
 class ThreadEnviaTabela (threading.Thread):
 	global tabela
-    def __init__():
-        threading.Thread.__init__(self)
+	def __init__():
+		threading.Thread.__init__(self)
 
-    def run(self):
- 		tabela.enviaRotina()
+	def run(self):
+		tabela.enviaRotina()
  	#envia periodicamente seu vetor de distancias
 
 class ThreadRecebeTabela (threading.Thread):
 	global tabela
-    def __init__():
-        threading.Thread.__init__(self)
+	def __init__():
+		threading.Thread.__init__(self)
 
-    def run(self):
- 		tabela.recebeTabela()
+	def run(self):
+		tabela.recebeTabela()
  	#recebeTabela vai receber a tabela de um de seus vizinhos, em seguida enviará um ACK, e por fim mandará
  	# seu vetor de distâncias atualizado para outros,
 
