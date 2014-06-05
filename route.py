@@ -1,4 +1,5 @@
 import time
+from collections import deque
 
 MAX_ROUTES = 64
 MAX_TTL = 120 #tempo
@@ -12,27 +13,21 @@ ESPERA_ACK = MAX_TTL/3 # tempo de espera por um ACK
 TAMANHO_MENSAGEM = 1000
 MAXIMO_NUMERO_TENTATIVAS = 6
 
-
-class route:
-    dest = 0
-    nexthop = 0
-    cost = 0
-    ttl = 0
-    def __init__():
-        self.dest = 0
-        self.nexthop = 0
-        self.cost = 0
-        self.ttl = 0
-
 class router:
-    table = []
+    table = None
     vizinhos = []
     conexoes = None
     num_routes = 0
-    def __init__(viz, lista_conexoes):
-        #cria tabela de roteamento
-        for i in range(0, MAX_ROUTES):
-            self.table.append(route())
+    #utilizada para criar a tabela globalmen
+    def __init__():
+        #deque ja tem controle a acesso concorrente de dados
+        table = deque(maxlen = MAX_ROUTES)
+        
+    def cria_tabela(viz, lista_conexoes):
+         #cria tabela de roteamento
+        for item in lista_conexoes:
+            self.table.appendleft(item)
+            self.num_routes += 1
         #cria lista com os vizinhos
         for item in viz:
             self.vizinhos.append(item)
@@ -59,8 +54,8 @@ class router:
         self.table[i].cost += 1
         self.sendChange()
 
-    def updatingRoutingTable(newRoute, numNewRoutes):
-        for (i in range(0, numNewRoutes):
+    def updatingRoutingTable(NewRoutes):
+        for (i in range(0, len(NewRoutes)):
             self.merge_routes(newRoute[i])
     
     def sendChange():
