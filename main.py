@@ -19,7 +19,7 @@ class ThreadEnviaTabela (threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
- 	route.enviaRotina()
+ 	tabela.enviaRotina()
  	#envia periodicamente seu vetor de distancias
 
 class ThreadRecebeTabela (threading.Thread):
@@ -27,7 +27,7 @@ class ThreadRecebeTabela (threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
- 	route.recebeTabela()
+ 	tabela.recebeTabela()
  	#recebeTabela vai receber a tabela de um de seus vizinhos, em seguida enviará um ACK, e por fim mandará
  	# seu vetor de distâncias atualizado para outros,
 
