@@ -42,12 +42,13 @@ def unpack(dados, nexthop):
 
 class router:
     table = None
+    #vizinhos = []
+    #conexoes = None
     vizinhos = []
-    conexoes = None
     num_routes = 0
     #utilizada para criar a tabela globalmen
     def __init__():
-        #deque ja tem controle a acesso concorrente de dados
+        #deque ja tem controle de acesso concorrente a dados
         table = deque(maxlen = MAX_ROUTES)
         
     def cria_tabela(viz, lista_conexoes):
@@ -56,9 +57,9 @@ class router:
             self.table.appendleft(item)
             self.num_routes += 1
         #cria lista com os vizinhos
-        for item in viz:
-            self.vizinhos.append(item)
-        self.conexoes = lista_conexoes
+        for item in range(0,len(viz)):
+            self.vizinhos.append([viz[item], lista_conexoes[item])
+        #self.conexoes = lista_conexoes
         
     #dada um nova rota atualiza a tabela de roteamento
     def merge_routes (new):
