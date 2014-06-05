@@ -5,10 +5,9 @@ import route
 import socket
 import threading
 import time
-from collections import deque
-
-TAMANHO_TABELA = 500 
-tabela = deque(maxlen = TAMANHO_TABELA) # create a deque with SIZE_BUFFER positions
+#from collections import deque
+tabela = route.router()
+#tabela = deque(maxlen = TAMANHO_TABELA) # create a deque with SIZE_BUFFER positions
 PORT = 9999 #porta com a qual sera feita a conexao
 timeout = 1 # DECLAREI UM VALOR ALEATORIO PARA TIMEOUT
 TEMPO_PARA_REENVIO = 60 #periodo (em segundos) para enviar mensagem de rotina
