@@ -122,7 +122,7 @@ class router:
             if numero_tentativas == MAXIMO_NUMERO_TENTATIVAS:
                 #atualiza todas as entradas que tenham esse nó de destino incomunicável com distâncias iguais a INFINITO 
                 
-    def recebeTabela():
+    def recebeTabela(self):
         #recebe no modo broadcast
         rs = socket(AF_INET, SOCK_DGRAM)
         end_local=('',54545)
@@ -131,5 +131,25 @@ class router:
             dados, end_orig = rs.recvfrom(4096)
         
             num_routes, newRoutes = unpack(dados)
-            self.updatingRoutingTable(newRoutes) 
-            
+            self.updatingRoutingTable(newRoutes)
+    
+    def enviaTabela(self):
+        
+        while True:
+            for item in self.vizinhos:
+                
+                dest = item[0]
+                mensagem = ""
+                mensagem += str(3)
+                mensagem += str(self.num_routes)
+                for (j in range(0, num_routes)):
+                    #faz o poisoning se tiver mandando a mensagem pro nexthop TEM QUE COLOCAR AQUELES NEGOCIOS DE ZFILL
+                    if (dest == self.table[j].nexthop):
+                        mensagem += self.table[j].dest
+                        mensagem += INFINITO
+                    else:
+                        mensagem += self.table[j].dest
+                        mensagem += self.table[j].cost
+                #envia mensagem
+                item[1].send(mensagem, dest)
+                
