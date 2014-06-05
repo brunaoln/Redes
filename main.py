@@ -38,11 +38,11 @@ def main():
     #PORT = parametro de entrada
 	global tabela
     
-    enviar = ThreadEnviaTabela()
-    enviar.start()
+	enviar = ThreadEnviaTabela()
+	enviar.start()
 
-    receber = ThreadRecebeTabela()
-    receber.start()
+	receber = ThreadRecebeTabela()
+	receber.start()
 
 if __name__ == "__main__":
-        main()
+	main()
