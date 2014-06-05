@@ -13,7 +13,6 @@ timeout = 1 # DECLAREI UM VALOR ALEATORIO PARA TIMEOUT
 TEMPO_PARA_REENVIO = 60 #periodo (em segundos) para enviar mensagem de rotina
 
 
-
 class ThreadEnviaTabela (threading.Thread):
 	global tabela
 	def __init__():
