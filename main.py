@@ -7,7 +7,8 @@ import threading
 import time
 import sys
 #from collections import dequee
-tabela = route.router()
+#tabela = route.router()
+tabela = None
 #tabela = deque(maxlen = TAMANHO_TABELA) # create a deque with SIZE_BUFFER positions
 PORT = 9999 #porta com a qual sera feita a conexao
 timeout = 1 # DECLAREI UM VALOR ALEATORIO PARA TIMEOUT
@@ -16,7 +17,7 @@ TEMPO_PARA_REENVIO = 60 #periodo (em segundos) para enviar mensagem de rotina
 
 class ThreadEnviaTabela (threading.Thread):
 	global tabela
-	def __init__():
+	def __init__(self):
 		threading.Thread.__init__(self)
 
 	def run(self):
@@ -25,13 +26,11 @@ class ThreadEnviaTabela (threading.Thread):
 
 class ThreadRecebeTabela (threading.Thread):
 	global tabela
-	host_name = ""
-	def __init__(self, host_name):
+	def __init__(self):
 		threading.Thread.__init__(self)
-		self.host_name = host_name
 
 	def run(self):
-		tabela.recebeTabela(self.host_name)
+		tabela.recebeTabela()
  	#recebeTabela vai receber a tabela de um de seus vizinhos, em seguida enviará um ACK, e por fim mandará
  	# seu vetor de distâncias atualizado para outros,
 
@@ -44,11 +43,12 @@ def main():
     	for i in xrange(len(argumentos)):
     		if argumentos[i] == '-h':
     			host_name = argumentos[i+1]
+    	tabela = route.router(host_name)
     	
 	enviar = ThreadEnviaTabela()
 	enviar.start()
 
-	receber = ThreadRecebeTabela(host_name)
+	receber = ThreadRecebeTabela()
 	receber.start()
 
 if __name__ == "__main__":
