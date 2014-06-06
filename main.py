@@ -21,7 +21,7 @@ class ThreadEnviaTabela (threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		tabela.enviaRotina()
+		tabela.enviaTabela()
  	#envia periodicamente seu vetor de distancias
 
 class ThreadRecebeTabela (threading.Thread):
