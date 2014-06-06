@@ -4,10 +4,11 @@ from socket import *
 import subprocess
 
 MAX_ROUTES = 64
-MAX_TTL = 120 #tempo que um entrada permanece na tabela. Utilizado também para verificar se o vizinho caiu
+MAX_TTL = 600 #tempo que um entrada permanece na tabela e para verificar se o nodo caiu
 INFINITO = 65 #maior que a maxima distancia que um host pode estar do outro
 MUDANCA = 0
-TEMPO_ROTINA = 300 #tempo para enviar o quadro de rotina
+MAX_TTL_NODO
+TEMPO_ROTINA = 60 #tempo para enviar o quadro de rotina
 
 # Nossas mensagens terao como primeiro campo que contem um numero de classificacao da mensagem:
 #        0 -> ACK para mensagem de rotina
@@ -62,7 +63,7 @@ class router:
             #cria uma lista com as propriedades de cada conexao
             a.append(item.addr)
             a.append(item.netmask)
-            a.append(MAX_TTL)
+            a.append(MAX_TTL_NODO)
             self.vizinhos.append(a)
             
     
@@ -139,6 +140,16 @@ class router:
         while True:
             if ((time.time() - t0) == TEMPO_ROTINA)
                 time_to_send_rotina = True
+                for item in self.vizinhos:
+                    #diminui o ttl de todos os vizinhos para checar se um nodo caiu
+                    item[-1] -= TEMPO_ROTINA
+                    if (item[-1] == 0):
+                            self.vizinhos.remove(item)
+                for item in self.table:
+                    item.ttl -= TEMPO_ROTINA
+                if (item.ttl == 0):
+                    self.table.remove(item)
+                    
             #se teve uma mudanca ou deu o periodo de enviar o quadro de rotina envia 
             if (MUDANCA or time_to_send_rotina):
                 t0 = time.time()
