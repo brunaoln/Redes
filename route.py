@@ -147,8 +147,8 @@ class router:
                             self.vizinhos.remove(item)
                 for item in self.table:
                     item.ttl -= TEMPO_ROTINA
-                if (item.ttl == 0):
-                    self.table.remove(item)
+                    if (item.ttl == 0):
+                        self.table.remove(item)
                     
             #se teve uma mudanca ou deu o periodo de enviar o quadro de rotina envia 
             if (MUDANCA or time_to_send_rotina):
