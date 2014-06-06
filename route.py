@@ -4,7 +4,7 @@ from socket import *
 import subprocess
 
 MAX_ROUTES = 64
-MAX_TTL = 120 #tempo
+MAX_TTL = 120 #tempo que um entrada permanece na tabela. Utilizado também para verificar se o vizinho caiu
 INFINITO = 65 #maior que a maxima distancia que um host pode estar do outro
 MUDANCA = 0
 TEMPO_ROTINA = 300 #tempo para enviar o quadro de rotina
@@ -18,17 +18,7 @@ TEMPO_ROTINA = 300 #tempo para enviar o quadro de rotina
 TAMANHO_MENSAGEM = 1000
 MAXIMO_NUMERO_TENTATIVAS = 6
 
-def route:
-    dest = 0
-    nexthop = 0
-    cost = 0
-    ttl = 0
-    def __init__(dest, nexthop, cost, ttl=120):
-        self.dest = dest
-        self.nexthop = nexthop
-        self.cost = cost
-        self.ttl = ttl
-
+#Separa a mensagem recebida nos campos da tabela
 def unpack(dados, nexthop):
     #guarda o numero de rotas daquela tabela
     num_routes = int(dados[0:2])
@@ -40,13 +30,24 @@ def unpack(dados, nexthop):
         j += 15
     return num_routes, newRoutes
 
+#cria uma entrada da tabela
+def route:
+    dest = 0
+    nexthop = 0
+    cost = 0
+    ttl = 0
+    def __init__(dest, nexthop, cost, ttl=120):
+        self.dest = dest
+        self.nexthop = nexthop
+        self.cost = cost
+        self.ttl = ttl
 
 class router:
     table = None
     vizinhos = None
     num_routes = 0
     nome_Nodo = None
-    #utilizada para criar a tabela globalmen
+    #utilizada para criar a tabela globalmente
     def __init__(self,host_name):
         #deque ja tem controle de acesso concorrente a dados
         self.table = deque(maxlen = MAX_ROUTES)
@@ -96,7 +97,6 @@ class router:
         #COLOCAR O LOCK
         MUDANCA = 1
         self.sendChange()
-        #ENVIA O ACK
 
     def updatingRoutingTable(self,NewRoutes):
         for (i in range(0, len(NewRoutes)):
