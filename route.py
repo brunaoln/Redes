@@ -52,7 +52,7 @@ class router:
         table = deque(maxlen = MAX_ROUTES)
         vizinhos = deque(maxlen = MAX_ROUTES)
         
-    def cria_tabela(viz, lista_conexoes):
+    def cria_tabela(self,viz, lista_conexoes):
          #cria tabela de roteamento
         for item in lista_conexoes:
             self.table.appendleft(item)
@@ -62,7 +62,7 @@ class router:
             self.vizinhos.append(item)
 
     #dada um nova rota atualiza a tabela de roteamento
-    def merge_routes (new):
+    def merge_routes (self,new):
         global MUDANCA
         for (i in range(0, self.num_routes)):
             if(new.dest == self.table[i].dest):
@@ -86,10 +86,10 @@ class router:
         
         #se a rota ja estava na tabela, deleta e depois adiciona a nova, se nao so adiciona
         if (in_table):
-            subprocess.call([nome_Nodo,"route", "del", "-net", new.dest])
-            subprocess.call([nome_Nodo,"route", "add", "-net", new.dest, "gw", new.nexthop])
+            subprocess.call([self.nome_Nodo,"route", "del", "-net", new.dest])
+            subprocess.call([self.nome_Nodo,"route", "add", "-net", new.dest, "gw", new.nexthop])
         else:
-            subprocess.call([nome_Nodo,"route", "add", "-net", new.dest, "gw", new.nexthop])
+            subprocess.call([self.nome_Nodo,"route", "add", "-net", new.dest, "gw", new.nexthop])
 
         
         #COLOCAR O LOCK
@@ -97,12 +97,12 @@ class router:
         self.sendChange()
         #ENVIA O ACK
 
-    def updatingRoutingTable(NewRoutes):
+    def updatingRoutingTable(self,NewRoutes):
         for (i in range(0, len(NewRoutes)):
             self.merge_routes(newRoute[i])
     
                 
-    def recebeTabela(self):
+    def recebeTabela(self, host_name):
         #recebe no modo broadcast
         rs = socket(AF_INET, SOCK_DGRAM)
         end_local=('',54545)
