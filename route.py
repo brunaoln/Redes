@@ -51,9 +51,22 @@ class router:
     def __init__(self,host_name):
         #deque ja tem controle de acesso concorrente a dados
         self.table = deque(maxlen = MAX_ROUTES)
+        #vizinhos e uma deque composta de lista de 4 elementos: [endereco, mascara, ttl]
         self.vizinhos = deque(maxlen = MAX_ROUTES)
         self.nome_Nodo = host_name
         
+    def preenche_viz(viz):
+        global MAX_TTL
+        vizinhos = []
+        for item in viz:
+            a = []
+            #cria uma lista com as propriedades de cada conexao
+            a.append(item.addr)
+            a.append(item.netmask)
+            a.append(MAX_TTL)
+            vizinhos.append(a)
+            
+    
     def cria_tabela(self, viz, lista_conexoes):
          #cria tabela de roteamento
         for item in lista_conexoes:
@@ -121,6 +134,9 @@ class router:
         #LOCK MUDANCA!!!!!!!!!!!!!!!!!!
         t0 = time.time()
         
+        #cria uma conexao para enviar as tabelas
+        con_udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        
         while True:
             if ((time.time() - t0) == TEMPO_ROTINA)
                 time_to_send_rotina = True
@@ -141,6 +157,8 @@ class router:
                         else:
                             mensagem += self.table[j].dest
                             mensagem += self.table[j].cost
+                    
                     #envia mensagem
-                    item[1].send(mensagem, dest)
-                
+                    dest = (item[0], PORT)
+                    con_udp.sendto(mensagem, dest)
+
