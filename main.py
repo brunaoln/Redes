@@ -25,11 +25,13 @@ class ThreadEnviaTabela (threading.Thread):
 
 class ThreadRecebeTabela (threading.Thread):
 	global tabela
-	def __init__():
+	host_name = ""
+	def __init__(self, host_name):
 		threading.Thread.__init__(self)
+		self.host_name = host_name
 
 	def run(self):
-		tabela.recebeTabela()
+		tabela.recebeTabela(self.host_name)
  	#recebeTabela vai receber a tabela de um de seus vizinhos, em seguida enviará um ACK, e por fim mandará
  	# seu vetor de distâncias atualizado para outros,
 
@@ -46,7 +48,7 @@ def main():
 	enviar = ThreadEnviaTabela()
 	enviar.start()
 
-	receber = ThreadRecebeTabela()
+	receber = ThreadRecebeTabela(host_name)
 	receber.start()
 
 if __name__ == "__main__":
