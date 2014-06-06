@@ -1,6 +1,7 @@
 import time
 from collections import deque
 from socket import *
+import subprocess
 
 MAX_ROUTES = 64
 MAX_TTL = 120 #tempo
@@ -65,6 +66,7 @@ class router:
         for (i in range(0, self.num_routes)):
             if(new.dest == self.table[i].dest):
                 if(new.cost + 1 < int(self.table[i].cost)):
+                    in_table = 1
                     break
                 else if (new.nexthop == self.nexthop):
                     break
@@ -73,12 +75,20 @@ class router:
         if (i == num_routes):
             if (num_routes < MAX_ROUTES):
                 num_routes += 1
+                in_table = 0
             else:
                 return #tabela ja esta cheia
         #atualiza a tabela de roteamento
         self.table[i] = new
         self.table[i].ttl = MAX_TTL
         self.table[i].cost += 1
+        
+        if (in_table):
+            subprocess.call([NOME DO NODO,"route", "del", "-net", new.dest])
+            subprocess.call([NOME DO NODO,"route", "add", "-net", new.dest, "gw", new.nexthop])
+        else:
+            subprocess.call([NOME DO NODO,"route", "add", "-net", new.dest, "gw", new.nexthop])
+
         
         #COLOCAR O LOCK
         MUDANCA = 1
