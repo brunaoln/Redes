@@ -45,6 +45,7 @@ class router:
     table = None
     vizinhos = None
     num_routes = 0
+    nome_Nodo = None
     #utilizada para criar a tabela globalmen
     def __init__():
         #deque ja tem controle de acesso concorrente a dados
@@ -85,10 +86,10 @@ class router:
         
         #se a rota ja estava na tabela, deleta e depois adiciona a nova, se nao so adiciona
         if (in_table):
-            subprocess.call([NOME DO NODO,"route", "del", "-net", new.dest])
-            subprocess.call([NOME DO NODO,"route", "add", "-net", new.dest, "gw", new.nexthop])
+            subprocess.call([nome_Nodo,"route", "del", "-net", new.dest])
+            subprocess.call([nome_Nodo,"route", "add", "-net", new.dest, "gw", new.nexthop])
         else:
-            subprocess.call([NOME DO NODO,"route", "add", "-net", new.dest, "gw", new.nexthop])
+            subprocess.call([nome_Nodo,"route", "add", "-net", new.dest, "gw", new.nexthop])
 
         
         #COLOCAR O LOCK
