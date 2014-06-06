@@ -83,6 +83,7 @@ class router:
         self.table[i].ttl = MAX_TTL
         self.table[i].cost += 1
         
+        #se a rota ja estava na tabela, deleta e depois adiciona a nova, se nao so adiciona
         if (in_table):
             subprocess.call([NOME DO NODO,"route", "del", "-net", new.dest])
             subprocess.call([NOME DO NODO,"route", "add", "-net", new.dest, "gw", new.nexthop])
