@@ -63,6 +63,7 @@ def main():
     		aux = InterfacesInfo(ifinfo, addr, netmask)
     		lista_Interfaces.append(aux)
     	
+    	tabela.preenche_viz(lista_Interfaces)
 	enviar = ThreadEnviaTabela()
 	enviar.start()
 
