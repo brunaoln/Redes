@@ -57,14 +57,13 @@ class router:
         
     def preenche_viz(viz):
         global MAX_TTL
-        vizinhos = []
         for item in viz:
             a = []
             #cria uma lista com as propriedades de cada conexao
             a.append(item.addr)
             a.append(item.netmask)
             a.append(MAX_TTL)
-            vizinhos.append(a)
+            self.vizinhos.append(a)
             
     
     def cria_tabela(self, viz, lista_conexoes):
