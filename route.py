@@ -47,12 +47,13 @@ class router:
     num_routes = 0
     nome_Nodo = None
     #utilizada para criar a tabela globalmen
-    def __init__():
+    def __init__(self,host_name):
         #deque ja tem controle de acesso concorrente a dados
-        table = deque(maxlen = MAX_ROUTES)
-        vizinhos = deque(maxlen = MAX_ROUTES)
+        self.table = deque(maxlen = MAX_ROUTES)
+        self.vizinhos = deque(maxlen = MAX_ROUTES)
+        self.nome_Nodo = host_name
         
-    def cria_tabela(self,viz, lista_conexoes):
+    def cria_tabela(self, viz, lista_conexoes):
          #cria tabela de roteamento
         for item in lista_conexoes:
             self.table.appendleft(item)
@@ -73,9 +74,9 @@ class router:
                     break
                 else:
                     return
-        if (i == num_routes):
-            if (num_routes < MAX_ROUTES):
-                num_routes += 1
+        if (i == self.num_routes):
+            if (self.num_routes < MAX_ROUTES):
+                self.num_routes += 1
                 in_table = 0
             else:
                 return #tabela ja esta cheia
