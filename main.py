@@ -5,6 +5,7 @@ import route
 import socket
 import threading
 import time
+import sys
 #from collections import dequee
 tabela = route.router()
 #tabela = deque(maxlen = TAMANHO_TABELA) # create a deque with SIZE_BUFFER positions
@@ -36,7 +37,12 @@ class ThreadRecebeTabela (threading.Thread):
 def main():
     #PORT = parametro de entrada
 	global tabela
-    
+	argumentos = sys.argv[1:]
+	host_name = ""
+    	for i in xrange(len(argumentos)):
+    		if argumentos[i] == '-h':
+    			host_name = argumentos[i+1]
+    	
 	enviar = ThreadEnviaTabela()
 	enviar.start()
 
