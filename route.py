@@ -153,12 +153,12 @@ class router:
                     item.ttl -= TEMPO_ROTINA
                     if (item.ttl == 0):
                         self.table.remove(item)
-                    
+            
+            thread_Lock.acquire()
             #se teve uma mudanca ou deu o periodo de enviar o quadro de rotina envia 
             if (MUDANCA or time_to_send_rotina):
                 t0 = time.time()
                 for item in self.vizinhos:
-                    thread_Lock.acquire()
                     MUDANCA = 0
                     thread_Lock.release()
                     #TIRA O LOCK MUDANCA!!!!!!!
