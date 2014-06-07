@@ -1,4 +1,5 @@
 import time
+import threading
 from collections import deque
 from socket import *
 import subprocess
@@ -9,6 +10,7 @@ INFINITO = 65 #maior que a maxima distancia que um host pode estar do outro
 MUDANCA = 0
 MAX_TTL_NODO
 TEMPO_ROTINA = 60 #tempo para enviar o quadro de rotina
+thread_Lock = threading.Lock()
 
 # Nossas mensagens terao como primeiro campo que contem um numero de classificacao da mensagem:
 #        0 -> ACK para mensagem de rotina
@@ -78,7 +80,7 @@ class router:
 
     #dada um nova rota atualiza a tabela de roteamento
     def merge_routes (self,new):
-        global MUDANCA
+        global MUDANCA, thread_Lock
         for (i in range(0, self.num_routes)):
             if(new.dest == self.table[i].dest):
                 if(new.cost + 1 < int(self.table[i].cost)):
@@ -108,8 +110,10 @@ class router:
 
         
         #COLOCAR O LOCK
+        thread_Lock.acquire()
         MUDANCA = 1
-        self.sendChange()
+        thread_Lock.release()
+        #self.sendChange()
 
     def updatingRoutingTable(self,NewRoutes):
         for (i in range(0, len(NewRoutes)):
@@ -130,7 +134,7 @@ class router:
     def enviaTabela(self):
         
         time_to_send_rotina = False
-        global MUDANCA, TEMPO_ROTINA
+        global MUDANCA, TEMPO_ROTINA, thread_Lock
         #LOCK MUDANCA!!!!!!!!!!!!!!!!!!
         t0 = time.time()
         
@@ -154,7 +158,9 @@ class router:
             if (MUDANCA or time_to_send_rotina):
                 t0 = time.time()
                 for item in self.vizinhos:
+                    thread_Lock.acquire()
                     MUDANCA = 0
+                    thread_Lock.release()
                     #TIRA O LOCK MUDANCA!!!!!!!
                     dest = item[0]
                     mensagem = ""
